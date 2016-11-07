@@ -174,145 +174,298 @@ To develop an appreciation for the importance of op amps in general.
  \end{center}
 \end{figure}
 
+From figure 1 we can see that the output signal is equal to the input signal, which is consistent with the function of the op-amp follower.
+
+Due to the golden rules, the signal inputs draw no current, so the input impedance is very large, like $10^{12} \Omega$. And the output impedance is very small (close to zero), we used the following method to measure the output impedance.
+
+First, we measured $V_{\mathrm{open}}=5.03V$, then add a larger resistor between the $V_{\mathrm{output}}$ and the ground, (to guarantee that the current won't saturate, and got the $V_{\mathrm{load}}=4.98V$ and $R_{\mathrm{load}}=192.4 \Omega$, so the current is $I=4.98/192.4=0.0259A$, and the output impedance is $R=\Delta V/I=(5.03-4.98)/0.0259=1.92 \Omega$, which is consistent with what we expect.
+
+The bandwidth is $2*10^6 $Hz. We set the $V_{in}=V_{\mathrm{pp}}$ as 0.2V, then find the frequency when output signal $V_{\mathrm{out}}=V_{in}/\sqrt{2}=0.1414V$, which is 2 million Hz.
+For this activity we can only use the Tektronix scopes to do this, we can't use the DAQmx and the VI because the sampling rate can not be set high enough for 2 million Hz input signal now.
 
 
-$V_{\mathrm {s} }=5 V$
-
-$V_{\mathrm {Dmax} }=0.58 V$
-
-$I_{\mathrm {Dmax} }=1 mA$
-
-$R_{\mathrm {3} }=100 \Omega$
-
-$R_{\mathrm {2} }=470 \Omega$
-
-$R_{\mathrm {1} }=4700 \Omega$
-
-$\Rightarrow V_{\mathrm {R2} }=I_{\mathrm {Dmax} }*R_{\mathrm {3} }+V_{\mathrm {Dmax} }=0.1+0.58=0.68 V$
-
-$\Rightarrow I_{\mathrm {R2} }={\frac {V_{\mathrm {R2} }}{R_{\mathrm {2} }}}=0.68/470=1.447 mA $
-
-$\Rightarrow I_{\mathrm {total} }=I_{\mathrm {R2} }+I_{\mathrm {Dmax} }=1.447+1=2.447 mA $
-
-$\Rightarrow P_{\mathrm {smax} }=I_{\mathrm {total} }*V_{\mathrm {s} }=0.002447*5=0.012 w $ \\[1em]
-
-$ V_{\mathrm {R1} }=V_{\mathrm {s} }-V_{\mathrm {R2} }=5-0.68=4.32 V $
-
-$\Rightarrow P_{\mathrm {R1} }=I_{\mathrm {total} }*V_{\mathrm {R1} }=0.002447*4.32=0.0106 w $ \\[1em]
-
-$\Rightarrow P_{\mathrm {R2} }=I_{\mathrm {R2} }*V_{\mathrm {R2} }=0.001447*0.68=0.984 mw $ \\[1em]
-
-$P_{\mathrm {R3} }=I_{\mathrm {D} }^2*R_{\mathrm {3} }=0.001^2*100=0.1 mw $
-
-From the pictures, we can see that our knee voltage is around 0.45V, which is consistent with what we have read for the diode (0.7V$\sim{Silicon}$, 0.3V$\sim{Germanium}$). And the reverse saturation current is around 200 $\mu$ A, which we think is too large compared to what we expect.
-
-
-
-\section{Activity II - Fitting Your IV Measurements to the Shockley Diode Equation Using a LabVIEW Least-Squares Fitting Function}
+\section{Activity II - The Inverting Amplifier}
 
 
 \begin{figure}[H]
  \begin{center}
-  \includegraphics[width=\linewidth/1]{act2}
-  \caption{The the front panel and block diagram for our fitting VI.}
-  \label{fig:act2}
+  \includegraphics[width=\linewidth/1]{act2100Hz}
+  \caption{The the front panel of the oscilloscope VI.}
+  \label{fig:act2100Hz}
  \end{center}
 \end{figure}
 
-The unit of the y axis in this picture should be mA, we forgot to modify it. And our fitting equation is $y=a*(e^{bx}-1)$, so if we compare that to $I_{\mathrm {D} }=I_{\mathrm {s} }*(e^{V_{\mathrm {D} }/ \eta V_{\mathrm {T} }}-1)$, we'll find that $I_{\mathrm {s} }=a=3.4 nA$ and $\eta=1/{bV_{\mathrm {T} }}=1/{21.92*0.026}=1.75$, which is consistent with what we expect($ \eta \approx 2$ and $I_{\mathrm {s} }\sim 1-5 nA$).
-
-PS: $T=300k$
-
-$V_{\mathrm {T} }=k_{\mathrm {B} }T/e=1.38064852*10^{-23}*300/(1.6*10^{-19})=0.026$
+By the golden rule, The output of the op-amp attempts to do whatever is necessary to make the voltage difference between the inputs zero, and the signal inputs draw no current, so in this inverting amplifier
+$V_{\mathrm{+}}=V_{\mathrm{-}}$, and because $V_{\mathrm{-}}$ is grounded, so $V_{\mathrm{+}}$ is like grounded also, which is called "virtual ground", so that $V_{\mathrm{in}}/R_{\mathrm{1}}=-V_{\mathrm{out}}/R_{\mathrm{2}}$, which is $V_{\mathrm{out}}=-{R_{\mathrm{2}} \over{R_{\mathrm{1}}}}V_{\mathrm{in}}$, and the input impedance is $\Delta V/ \Delta I={{4V-3.5V}\over{0.00171A-0.001665A}}=11111.11\Omega$
 
 
+First we chose $R_{\mathrm{1}}=100 \Omega$ and $R_{\mathrm{2}}=10k \Omega$, so that the gain is $Gain={R_{\mathrm{2}} \over{R_{\mathrm{1}}}}={10000 \over100}=100$. And we the bandwidth we got is 150kHz, by using the same way in activity I. Because the gain is 100, so the bandwidth in Activity I with the follower should be 100 times of the bandwidth here, which is consistent.
 
-\section{Activity III - Measuring the Characteristics of the 1N4735A Zener Diode}
+\begin{figure}[H]
+ \begin{center}
+  \includegraphics[width=\linewidth/2]{amplifier}
+  \caption{}
+  \label{fig:amplfier}
+ \end{center}
+\end{figure}
 
+\section{Activity III - The Non-Inverting Amplifier}
 
 
 \begin{figure}[H]
  \begin{center}
-  \includegraphics[width=\linewidth/1]{act3bp}
-  \caption{The block diagram of the VI.}
-  \label{fig:act3bp}
+  \includegraphics[width=\linewidth/1]{act3_1000times}
+  \caption{The front panel of the VI for gain of 1000.}
+  \label{fig:act3_1000times}
  \end{center}
 \end{figure}
 
 \begin{figure}[H]
  \begin{center}
-  \includegraphics[width=\linewidth/1]{act3bias2}
-  \caption{The front panel of the forward bias IV measurements.}
-  \label{fig:act3bias2}
+  \includegraphics[width=\linewidth/1]{act3_100times}
+  \caption{The front panel of the VI for gain of 100.}
+  \label{fig:act3_100times}
+ \end{center}
+\end{figure}
+
+For non-inverting amplifier,
+
+$V_{\mathrm{in}}=V_{\mathrm{+}}=V_{\mathrm{-}}$
+
+$\Rightarrow I_{\mathrm {R_{1}}}=V_{\mathrm{-}}/R_{\mathrm {1}}$ 
+
+$\Rightarrow {\displaystyle V_{\mathrm{out}}=V_{\mathrm{in}}+I_{\mathrm {R_{1}}}R_{2}=V_{\mathrm{in}}\left(1+{\frac {R_{2}}{R_{1}}}\right)} $
+
+And because "The signal inputs draw no current", so the input impedance=$V_{in}/I_{in}$=infinity.
+
+We chose $R_{2}=10k \Omega$ and $R_{1}=100 \Omega$ to get the gain of 100, and we chose $R_{2}=100k \Omega$ and $R_{1}=100 \Omega$ to get the gain of 1000. And from the screen shots, we can see that the results are consistent with what we expect.
+
+The measured bandwidth for gain of 100 is 62 kHz, and for gain of 1000 is 5 kHz. And we found that these results make sense because in activity I when the gain is 1, the magnitude of the bandwidth is $\sim10^6$Hz, and now when gain is 100, the magnitude is $\sim10^4$Hz, and the magnitude is $\sim10^3$Hz for the gain of 1000.
+
+\vbox{}
+
+\begin{figure}[H]
+ \begin{center}
+  \includegraphics[width=\linewidth/1]{act3_4}
+  \caption{The front panel of the VI with a capacitor and DC offset of 1V.}
+  \label{fig:act3_4}
+ \end{center}
+\end{figure}
+
+The way to "roll off" the gain to unity at DC is to insert a capacitor in series with $R_{1}$. And we chose the capacitor of $4.3 \mu F$ and set the DC offset as 1V. And from the picture above we can see it works, the DC offset was not amplified.
+
+so use the impedance $R_{1}+{1 \over{i\omega C}}$ instead of $R_{1}$, the transform function
+
+$TF\ ={V_{out}\over{V_{in}}}$
+
+$\qquad = {{{R_{2}+(R+{1 \over{i\omega C}})}}\over{{R+{1\over{i\omega C}}}}}$
+
+$\qquad = 1+ {{{R_{2}}}\over{{R+{1\over{i\omega C}}}}}$
+
+$\qquad = {{{1+i\omega C(R_{2}+R)}}\over{{1+{i\omega CR}}}}$
+
+\begin{figure}[H]
+ \begin{center}
+  \includegraphics[width=\linewidth/1]{act3_4b}
+  \caption{The transform function with a capacitor.}
+  \label{fig:act3_4b}
+ \end{center}
+\end{figure}
+
+
+\section{Activity IV - The Difference Amplifier}
+
+\begin{figure}[H]
+ \begin{center}
+  \includegraphics[width=\linewidth/1]{act4AC_V1eqV2}
+  \caption{The front panel the VI when $V_{1}=V_{2}$.}
+  \label{fig:act4AC_V1eqV2}
+ \end{center}
+\end{figure}
+
+As shown in the picture above, we set $V_{2}=V_{1}=V_{in}$, so you can see that in our plot $V_{out}=V_{2}-V_{1} \approx 0$, which is consistent with what we expect. And the following shows the derivation of the operation of the ideal difference amplifier.
+
+$I_{1}={V_{1}-V_{-}\over R_{1}}$
+
+$I_{2}={V_{2}-V_{+}\over R_{2}}$
+
+$I_{f}={V_{-}-V_{out}\over R_{f}}$
+
+$V_{+}=V_{-}$ (Because of the golden rule)
+
+$V_{+}=V_{2}({R_{3}\over R_{2}+R_{3}})$
+
+if $V_{2}=0$, then $V_{out-}=-V_{1}({R_{3}\over R_{1}})$
+
+if $V_{1}=0$, then $V_{out+}=V_{2}({R_{3}\over R_{2}+R_{3}})({R_{1}+R_{3}\over R_{1}})$
+
+$V_{out}=V_{out-}+V_{out+}=-V_{1}({R_{3}\over R_{1}})+V_{2}({R_{3}\over R_{2}+R_{3}})({R_{1}+R_{3}\over R_{1}})$
+
+so, if $R_{1}=R_{2}=R_{3}=R_{f}$
+
+then $V_{out}=V_{2}-V_{1}$
+
+And our observations are different from the case of an ideal difference amplifier, the $V_{out}\over V_{in}$ plot in frequency domain shows that there is a 1/300 rejection in DC when the frequency is low. And when it goes to the high frequency, the rejection degenerate. And there is a trough when the frequency is around 15MHz because of the phase shift. The following picture shows what we observed.
+
+\begin{figure}[H]
+ \begin{center}
+  \includegraphics[width=\linewidth/2]{act4}
+  \caption{The $V_{out}/V_{in} - frequency$ plot for a difference amplifier}
+  \label{fig:act4}
+ \end{center}
+\end{figure}
+
+
+\begin{figure}[H]
+ \begin{center}
+  \includegraphics[width=\linewidth/1]{act4and5}
+  \caption{}
+  \label{fig:act4and5}
+ \end{center}
+\end{figure}
+
+\section{Activity V - The Op-Amp Adder}
+
+\begin{figure}[H]
+ \begin{center}
+  \includegraphics[width=\linewidth/1]{act5AC_V1eqV2}
+  \caption{The front panel the VI when $V_{1}=V_{2}$}
+  \label{fig:act5AC_V1eqV2}
+ \end{center}
+\end{figure}
+
+As shown in the picture above, we set $V_{2}=V_{1}=V_{in}$, so you can see that in our plot $V_{out}=-(V_{2}+V_{1})=2V_{in}$, which is consistent with what we expect. And the following shows the derivation of the operation of the ideal adder amplifier.
+
+As shown is figure 8,
+
+$I_{f}=I_{1}+I_{2}=-({V_{1}\over R_{1}}+{V_{2}\over R_{2}})$
+
+$R_{1}=R_{2}=R_{f}$
+
+Inverting Equation: $V_{out}=-{R_{f}\over R_{in}}*V_{in}$
+
+so, $V_{out}=-({R_{f}\over R_{1}}V_{1}+{R_{f}\over R_{2}}V_{2})=-(V_{1}+V_{2})$
+
+The following picture shows what we observed for an op-amp adder.
+
+\begin{figure}[H]
+ \begin{center}
+  \includegraphics[width=\linewidth/2]{act5}
+  \caption{The $V_{out}/V_{in} - frequency$ plot for a op-amp adder}
+  \label{fig:act5}
+ \end{center}
+\end{figure}
+
+\section{Activity VI and VII - The Differentiator and the Integrator}
+
+\begin{figure}[H]
+ \begin{center}
+  \includegraphics[width=\linewidth/1]{act6and7}
+  \caption{}
+  \label{fig:act6and7}
+ \end{center}
+\end{figure}
+
+For an Op-Amp differentiator:
+
+The golden rule $\Rightarrow I_{-}=0$ and $V_{-}=V_{+}=0$
+
+$\Rightarrow I_{in}=I_{R}$
+
+and $I_{R}=-{V_{out}\over R}$
+
+$Q=C*V_{in}$
+
+$\Rightarrow {dQ\over dt}=C{dV_{in}\over dt}$
+
+$I_{in}=C{dV_{in}\over dt}=I_{R}$
+
+$\Rightarrow -{V_{out}\over R}=C{dV_{in}\over dt}$
+
+$\Rightarrow V_{out}=-RC{dV_{in}\over dt}$
+
+\vbox{}
+
+For an Op-Amp integrator:
+
+The golden rule $\Rightarrow I_{-}=0$ and $V_{-}=V_{+}=0$
+
+$\Rightarrow V_{C}=V_{-}-V_{out}=0-V_{out}=-V_{out}$
+
+$V_{C}={Q \over C}$
+
+$\Rightarrow -{dV_{out} \over dt}={dQ \over Cdt}={1 \over C}{dQ \over dt}$
+
+$I_{in}={{V_{in}-0}\over R}={V_{in}\over R}$
+
+$I_{C}=C{dV_{out} \over dt}=C{dQ \over Cdt}={dQ\over dt}={dV_{out}C \over dt}$
+
+$\Rightarrow I_{in}=I_{C}=C{V_{in} \over R}={dV_{out}C \over dt}$
+
+$\Rightarrow {V_{in}\over V_{out}}*{dt\over R_{in}C}=1$
+
+$\Rightarrow V_{out}=-{1\over R_{in}C}\int_{0}^{t}V_{in}dt=-\int_{0}^{t}V_{in}{dt\over R_{in}C}$
+
+
+\begin{figure}[H]
+ \begin{center}
+  \includegraphics[width=\linewidth/1]{act6diff_sin}
+  \caption{The front panel of Op-Amp differentiator for sine wave}
+  \label{fig:act6diff_sin}
  \end{center}
 \end{figure}
 
 \begin{figure}[H]
  \begin{center}
-  \includegraphics[width=\linewidth/1]{act3rev1}
-  \caption{The front panel of the reverse bias IV measurements.}
-  \label{fig:act3rev1}
+  \includegraphics[width=\linewidth/1]{act6diff_square}
+  \caption{The front panel of Op-Amp differentiator for square wave}
+  \label{fig:act6diff_square}
  \end{center}
 \end{figure}
 
 \begin{figure}[H]
  \begin{center}
-  \includegraphics[width=\linewidth/1]{act3vv}
-  \caption{The image of the data for the voltage regulation circuit.}
-  \label{fig:act3vv}
- \end{center}
-\end{figure}
-
-\section{Activity V - Building and Characterizing Some Important Diode-Based Circuits}
-
-\begin{figure}[H]
- \begin{center}
-  \includegraphics[width=\linewidth/1]{act5bp}
-  \caption{The block diagram of the VI.}
-  \label{fig:act3bp}
+  \includegraphics[width=\linewidth/1]{act6inte_sin}
+  \caption{The front panel of Op-Amp integrator for sine wave}
+  \label{fig:act6inte_sin}
  \end{center}
 \end{figure}
 
 \begin{figure}[H]
  \begin{center}
-  \includegraphics[width=\linewidth/1]{act5acapac100Hz}
-  \caption{The front panel of the half-wave rectifier with the capacitor(100Hz).}
-  \label{fig:act5acapac100Hz}
+  \includegraphics[width=\linewidth/1]{act6inte_square}
+  \caption{The front panel of Op-Amp integrator for square wave}
+  \label{fig:act6inte_square}
  \end{center}
 \end{figure}
+
+Our method to balance the integration circuit is to add a large resistor in parallel with the capacitor, so that the low-frequency signal won't pass the capacitor (will pass the resistor).
 
 \begin{figure}[H]
  \begin{center}
-  \includegraphics[width=\linewidth/1]{act5anocapac100Hz}
-  \caption{The front panel of the half-wave rectifier without the capacitor(100Hz).}
-  \label{fig:act5anocapac100Hz}
+  \includegraphics[width=\linewidth/1]{act6inte_square_lowResist}
+  \caption{The front panel of Op-Amp integrator for square wave with a resistor}
+  \label{fig:act6inte_square_lowResist}
  \end{center}
 \end{figure}
+
+\section{Activity VIII - The Transimpedance Amplifier}
 
 \begin{figure}[H]
  \begin{center}
-  \includegraphics[width=\linewidth/1]{act5b10Hz4v-6v}
-  \caption{The front panel of the diode clipper(V1=4V, V2=-6V).}
-  \label{fig:act5b10Hz4v-6v}
+  \includegraphics[width=\linewidth/1]{act8b}
+  \caption{The Transimpedance Amplifier}
+  \label{fig:act8b}
  \end{center}
 \end{figure}
 
-\begin{figure}[H]
- \begin{center}
-  \includegraphics[width=\linewidth/1]{act5c10Hzcapac}
-  \caption{The front panel of the full-wave rectifier with the capacitor(10Hz).}
-  \label{fig:act5c10Hzcapac}
- \end{center}
-\end{figure}
+The golden rule $\Rightarrow I_{-}=0, V_{-}=V_{+}=0$
 
-\begin{figure}[H]
- \begin{center}
-  \includegraphics[width=\linewidth/1]{act5c10Hznocapac}
-  \caption{The front panel of the full-wave rectifier without the capacitor(10Hz).}
-  \label{fig:act5c10Hznocapac}
- \end{center}
-\end{figure}
+$\Rightarrow V_{out}=-I_{in}R_{f}$
 
+This relationship can be usedfor measuring miniscule levels of current.
+
+For this lab, in order to build a current source to supply the current, we added a large resistor $R_{s}$ in series with a voltage source, so $I_{in}={V_{in}\over R_{s}+R_{f}}$. So if we want to measure a very small $I_{in}$, we need to make $R_{s}$ very large. But now we set $R_{s}=R_{f}=1K\Omega $, so in the following figure, $V_{out}=-{R_{f}\over R_{s}}V_{in}=-V_{in}$, which is as same as an inverting amplifier, so all the results can be seen in activity 2.
 
 
 \end{document}
